@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="kr.or.kosta.dao.EventDao"> <!-- 주호 -->
+	<!-- list 가져오기 -->
+	<select id="getEventList" resultType="kr.or.kosta.dto.Event">
+		SELECT * FROM EVENT
+	</select>
+
+	<select id="getEvent" resultType="kr.or.kosta.dto.Event">
+		SELECT eventnum, eventtitle, eventimage, eventcontent, writer
+		FROM EVENT
+		WHERE EVENTNUM=#{eventNum}
+	</select>
+
+	<insert id="addEvent" parameterType="kr.or.kosta.dto.Event">
+		insert into event values(Event_eventNum.nextval, #{eventTitle}, #{eventImage, jdbcType=VARCHAR}, #{eventContent}, '0000')
+	</insert>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:context="http://www.springframework.org/schema/context"
+ xmlns:tx="http://www.springframework.org/schema/tx"
+ xmlns:mvc="http://www.springframework.org/schema/mvc"
+ xmlns:security="http://www.springframework.org/schema/security"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                     http://www.springframework.org/schema/beans/spring-beans.xsd
+                     http://www.springframework.org/schema/context
+					http://www.springframework.org/schema/context/spring-context.xsd
+					http://www.springframework.org/schema/mvc
+					http://www.springframework.org/schema/mvc/spring-mvc.xsd
+  					 http://www.springframework.org/schema/security 
+  					 http://www.springframework.org/schema/security/spring-security.xsd
+  					  http://www.springframework.org/schema/tx 
+  					 http://www.springframework.org/schema/tx/spring-tx.xsd
+  					 ">
+<!-- 
+	스프링 시큐리티는 지금까지 직접 구현해왔던 아이디/비밀번호를 입력하고 로그인하여 사용자를 인증(Authentication)하고, 
+	로그인후 프로그램의 각각의 기능에 대한 권한을 체크(Authorization)하는 작업을 구현해둔 보안 프레임웍 입니다.
+
+	3단계 DB 연동 테스트
+	roll 테이블 (사용자의 roll 정보) : 권한정보
+	
+	hasRole() = hasAuthority()
+	access="permitAll" 은 누구나 접근 가능하다는 것을 의미.
+ -->
+ 	<security:http use-expressions="true">
+	    <security:csrf disabled="true" />
+		<security:intercept-url pattern="/User/**" access="hasRole('ROLE_USER')" />
+  		<security:intercept-url pattern="/Admin/**" access="hasRole('ROLE_ADMIN')" />
+  		<security:intercept-url pattern="/**" access="permitAll" />
+	    <security:form-login 
+	    	login-page="/login.htm"
+	    	authentication-failure-url="/login.htm?error"
+	    />
+	    <security:logout />       
+	</security:http>
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="bk" password="bk" authorities="ROLE_USER"/>
+				<security:user name="0000" password="0000" authorities="ROLE_ADMIN"/>
+				<security:user name="1111" password="1111" authorities="ROLE_ADMIN"/>
+				<security:user name="0001" password="0000" authorities="ROLE_ADMIN"/>
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+
+</beans>

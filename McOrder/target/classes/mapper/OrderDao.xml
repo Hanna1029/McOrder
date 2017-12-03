@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.or.kosta.dao.OrderDao">
+	<!-- 주문 리스트 구하기  한나-->
+   	<select id="getCompletedOrder" resultType="kr.or.kosta.dto.Order">
+		select orderNum, mo.id, price, menu, orderStartTime, 
+		to_char(orderCompleteTime, 'YYYY-MM-DD HH24:MI:SS') orderCompleteTimestr
+		, orderComplete, branchCode, deliveryNum, m.phoneNum
+		from memberorder mo ,member m 
+		where mo.id = m.id and branchCode=#{branchCode}
+		order by mo.orderComplete asc , mo.orderCompleteTime desc 
+	</select>  
+<!--    	<select id="getCompletedOrder" resultType="kr.or.kosta.dto.Order">
+		select *
+		from(
+		select rownum rn, orderNum, mo.id, price, menu, orderStartTime, orderCompleteTime
+		, orderComplete, branchCode, deliveryNum, m.phoneNum
+		from memberorder mo ,member m 
+		where mo.id = m.id and branchCode=#{param1}
+		order by mo.orderComplete asc , mo.orderNum desc 
+		) where rn between #{param2} and #{param2} 
+		
+	</select> -->
+	<!-- 총 인원수 구하기  한나 -->
+	<select id="getCount" resultType="Integer">
+		select count(*) cnt
+		from memberorder
+	</select>
+	
+	<!--한나 1. 주문완료 처리하기   -->
+	<update id="completeOrder">
+		update memberorder
+		set orderComplete=1, orderCompleteTime=sysdate
+		where branchCode=#{param1} and orderNum=#{param2}
+	</update>
+	
+	<!-- // 2. 1에서 리턴값이 있으면 그 해당 오더의 정보받아오기
+	public Order getOrder(int branchCode, int orderNum); -->
+	
+	<select id="getOrder" resultType="kr.or.kosta.dto.Order">
+		select * 
+		from memberorder
+		where branchCode=#{param1} and orderNum=#{param2}
+	</select>
+	
+	<!-- // 3. orderCompleteDate의 값을 받아서 sales 테이블에 해당하는 날짜가 있는 지 확인 이떄 substr로 2017-11-08이런식으로만 매칭하기
+	public Sales getSalesDate(int branchCode, int orderCompleteDate); -->
+	
+	<select id="getSalesDate" resultType="kr.or.kosta.dto.Sales">
+		select * 
+		from sales
+		where branchCode=#{param1} and salesDate =#{param2}
+	</select>
+	
+	
+	
+	<!-- // 4.1 만약 3의 리턴값이 null 이라면 먼저 테이블에 그 날짜를 insert 하고 4.2 실행 
+	public int addSalesDate(int branchCode, int orderCompleteDate); -->
+	
+	<insert id="addSalesDate">
+		insert into sales values(#{param2}, #{param1}, 0)
+	</insert>
+	
+	<!-- // 4.2  만약 3의 리턴값이 null이 아니라면 update문 실행해서 totalSales의 총 매출액에 price 더해주기
+	public int addTotalSales(int branchCode, int orderCompleteDate, int price); 
+		이때 price는 아예 더해져서 온다 왜냐면 위에 객체에 가격이 같이 오기 때문!!!!
+	-->
+	<update id="addTotalSales">
+		update sales set totaldailysales=#{param3} where branchCode=#{param1} and salesDate=#{param2}
+	</update>
+</mapper>
