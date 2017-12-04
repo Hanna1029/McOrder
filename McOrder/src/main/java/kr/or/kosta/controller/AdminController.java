@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -85,57 +86,137 @@ public class AdminController {
 		}
 		
 		// 최상위 관리자 이벤트 등록 처리 (주호) // _(수진) 이미지 출력되게 수정!!!!
+		@RequestMapping(value = "regEvent.htm", method = RequestMethod.POST)
+		public String addEvent(Event event, HttpServletRequest request, Principal principal)
+				throws IOException, ClassNotFoundException, SQLException {
+			System.out.println("이벤트 등록 컨트롤러 들어왔어!!");
+			System.out.println("뷰에서 event 값 가지고 왔니" + event);
+			System.out.println(event);
+
+			/*
+			 * CommonsMultipartFile file = event.getFile();
+			 * 
+			 * String filename = ""; String fpath2 = ""; //수진 변경 if(file != null) {
+			 * //업로드한 파일이 있다면 filename = file.getOriginalFilename(); String path =
+			 * request.getServletContext().getRealPath("/resources/upload"); String
+			 * fpath = path + "\\" + filename; fpath2 = "resources/upload" + "/" +
+			 * filename; // 수진 변경
+			 * 
+			 * //System.out.println(filename + " , " + fpath);
+			 * 
+			 * if(!filename.equals("")) { //서버에 파일 업로드 (write)
+			 * //System.out.println("여기 들어왔나?"); FileOutputStream fs = new
+			 * FileOutputStream(fpath); fs.write(file.getBytes()); fs.close(); } }
+			 */
+			// 실 DB Insert
+			// event.setEventImage(filename);
+
+			List<CommonsMultipartFile> files = event.getFiles();
+			String fpath2 = null;
+			List<String> filenames = new ArrayList<String>(); // 파일명만 추출
+			if (files != null && files.size() > 0) {
+				// 업로드한 파일이 하나라도 있다면
+				for (CommonsMultipartFile mutifile : files) {
+					String filename = mutifile.getOriginalFilename();
+					String path = request.getServletContext().getRealPath("/resources/upload");
+					String fpath = path + "\\" + filename;
+					fpath2 = "resources/upload" + "/" + filename; //
+					System.out.println(filename + " , " + fpath);
+					if (!filename.equals("")) {
+						// 서버에 파일 업로드 (write)
+						FileOutputStream fs = new FileOutputStream(fpath);
+						fs.write(mutifile.getBytes());
+						fs.close();
+					}
+					filenames.add(fpath2);
+				}		
+			}
+
+			event.setEventImage1(filenames.get(0));
+			event.setEventImage2(filenames.get(1));
+			eventService.addEvent(event);
+
+			return "redirect:/Admin/manageEvent.htm";
+		}
+
+
+		// ((수정화면))최상위 관리자가 이벤트수정하려고 가는 페이지 뷰단만 보여주는것 // 수진
+		// dao 에서 event 객체 받아서 수정페이지에 내용 주자
+		@RequestMapping(value = "editDetailEvent.htm", method = RequestMethod.GET)
+		public String showEditEventForm(int eventNum, Model model) {
+			System.out.println("수정화면 시작");
+			Event event = eventService.getEvent(eventNum);
+			model.addAttribute("event", event);
+			System.out.println("수정화면 끄읏");
+			return "editDetailEvent.admin";
+		}
 		
-				@RequestMapping(value = "regEvent.htm", method = RequestMethod.POST)
-				public String addEvent(Event event, HttpServletRequest request, Principal princpal) throws IOException {
-					
-					CommonsMultipartFile file = event.getFile();
-					
-					String filename = "";
-					String fpath2 = ""; //수진 변경
-					if(file != null) {
-						 //업로드한 파일이 있다면
-							 filename = file.getOriginalFilename();
-							 String path = request.getServletContext().getRealPath("/resources/upload");
-							 String fpath = path + "\\" + filename;
-							 fpath2 = "resources/upload" + "/" + filename; // 수진 변경
-							 
-							 //System.out.println(filename + " , " + fpath);
-							 
-							 if(!filename.equals("")) {
-								 //서버에 파일 업로드 (write)
-								 //System.out.println("여기 들어왔나?");
-								 FileOutputStream fs = new FileOutputStream(fpath);
-								 fs.write(file.getBytes());
-								 fs.close();
-						 }
-					 }
-					//실 DB Insert
-					//event.setEventImage(filename);
-					 event.setEventImage(fpath2); // 수진 변경
-					 
-					 eventService.addEvent(event);
-					
-					return "redirect:/Admin/manageEvent.htm";
+		// ((처리화면))최상위 관리자가 이벤트 수정완료후 다시 이벤트리스트로 돌아 가는 것 // 수진
+		@RequestMapping(value = "editDetailEvent.htm", method = RequestMethod.POST)
+		public String editCompleteEvent(Event event, HttpServletRequest request)
+				throws IOException, ClassNotFoundException, SQLException {
+			System.out.println("수정처리화면 시작");
+			System.out.println(event);
+
+			/*
+			 * CommonsMultipartFile file = event.getFile();
+			 * 
+			 * String fpath2 = null; if (file != null) { // 업로드한 파일이 있다면 String
+			 * filename = file.getOriginalFilename(); String path =
+			 * request.getServletContext().getRealPath("/resources/upload"); String
+			 * fpath = path + "\\" + filename; fpath2 = "resources/upload" + "/" +
+			 * filename; // 수진 변경
+			 * 
+			 * // System.out.println(filename + " , " + fpath);
+			 * 
+			 * if (!filename.equals("")) { // 서버에 파일 업로드 (write) //
+			 * System.out.println("여기 들어왔나?"); FileOutputStream fs = new
+			 * FileOutputStream(fpath); fs.write(file.getBytes()); fs.close(); } }
+			 * 
+			 * event.setEventImage(fpath2); // 수진 변경
+			 */
+	System.out.println("123");
+			List<CommonsMultipartFile> files = event.getFiles();
+			List<String> filenames = new ArrayList<String>();// 파일명만 추출
+			String fpath2 = null;
+
+			if (files != null && files.size() > 0) {
+				System.out.println("if문탔니");
+				// 업로드한 파일이 하나라도 있다면
+				for (CommonsMultipartFile multifile : files) {
+					System.out.println("for문은?");
+					String filename = multifile.getOriginalFilename();
+					String path = request.getServletContext().getRealPath("/resources/upload");
+					String fpath = path + "\\" + filename;
+					fpath2 = "resources/upload" + "/" + filename; // 수진
+					System.out.println(filename + "/" + fpath);
+					if (!filename.equals("")) {
+						// 서버에 파일 쓰기 작업
+						FileOutputStream fs = new FileOutputStream(fpath);
+						fs.write(multifile.getBytes());
+						fs.close();
+					}
+					filenames.add(fpath2);
+					;// 실제 DB insert 할 파일명
 				}
+			}
+			// DB작업
+			event.setEventImage1(filenames.get(0));
+			event.setEventImage2(filenames.get(1));
+
+			eventService.editCompleteEvent(event);
+
+			return "redirect:/Admin/manageEvent.htm";
+		}
 
 
-		
-	// 관리자가 이벤트 수정할 때 수정 페이지 get방식으로 뿌리는 것
-	// dao 에서 event 객체 받아서 수정페이지에 내용 주자
-	public String showEditEventForm(int eventNum, Model model) {
-		return null;
-	}
 
-	// 관리자가 수정 후 리스트로 돌아간다.
-	public String editCompleteEvent(Event event) {
-		return null;
-	}
-
-	// 관리자가 이벤트 삭제했을때 > 비동기로? 아니다 페이지전환으로 리스트페이지로 다시가
-	public String deleteEvent(int eventNum, Model model) {
-		return null;
-	}
+		// 최상위 관리자가 이벤트삭제 후 다시 이벤트리스트로 돌아 가는 것 // 수진
+		@RequestMapping(value = "deleteEvent.htm")
+		public String deleteEvent(int eventNum, Model model) {
+			eventService.deleteEvent(eventNum);
+			return "redirect:/Admin/manageEvent.htm";
+		}
 	///////////////////////////////////////////////////////////////////
 
 	// 하위관리자가 관리자 페이지에서 매장에 판매되는 메뉴리스트 보는 것

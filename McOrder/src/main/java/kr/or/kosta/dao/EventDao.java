@@ -15,10 +15,10 @@ public interface EventDao {
 	// 관리자가 이벤트 등록
 	public int addEvent(Event event);
 	
-	// 관리자기 이벤트 수정
+	// 관리자기 이벤트 수정 (수진)
 	public int editCompleteEvent(Event event);
 	
-	// 관리자가 이벤트 삭제
-	public int deleteEvent(int eventNum);
+	// 관리자가 이벤트 삭제 (수정__수진)
+	public void deleteEvent(int eventNum);
 	
 }

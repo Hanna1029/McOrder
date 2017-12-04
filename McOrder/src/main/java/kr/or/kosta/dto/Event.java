@@ -1,44 +1,44 @@
 package kr.or.kosta.dto;
 
+import java.util.List;
+
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 public class Event {
 
 	private int eventNum;
-	private String eventImage;
+	
 	private String eventTitle;
-	private String eventContent;
-	//단일 파일 업로드 추가//////////////////////////////////// (주호)
+	private String eventContent;	
 	private String writer;
 	
-	public String getWriter() {
-		return writer;
-	}
-	public void setWriter(String writer) {
-		this.writer = writer;
-	}
-	private CommonsMultipartFile file;
+	private String eventImage1;
+	private String eventImage2;
+	
+	//단일 파일 업로드 추가//////////////////////////////////// (주호)_수진 변경
+	/*private CommonsMultipartFile file;
 	public CommonsMultipartFile getFile() {
 		return file;
 	}
 	public void setFile(CommonsMultipartFile file) {
 		this.file = file;
 	}
+	*/
+	//다중 파일 업로드/////////////////////////////////////
+	private List<CommonsMultipartFile> files;
 	
+	public List<CommonsMultipartFile> getFiles() {
+		return files;
+	}
+	public void setFiles(List<CommonsMultipartFile> files) {
+		this.files = files;
+	}
 	/////////////////////////////////////////////////
-
-	
 	public int getEventNum() {
 		return eventNum;
 	}
 	public void setEventNum(int eventNum) {
 		this.eventNum = eventNum;
-	}
-	public String getEventImage() {
-		return eventImage;
-	}
-	public void setEventImage(String eventImage) {
-		this.eventImage = eventImage;
 	}
 	public String getEventTitle() {
 		return eventTitle;
@@ -52,12 +52,31 @@ public class Event {
 	public void setEventContent(String eventContent) {
 		this.eventContent = eventContent;
 	}
+	public String getWriter() {
+		return writer;
+	}
+	public void setWriter(String writer) {
+		this.writer = writer;
+	}
+	public String getEventImage1() {
+		return eventImage1;
+	}
+	public void setEventImage1(String eventImage1) {
+		this.eventImage1 = eventImage1;
+	}
+	public String getEventImage2() {
+		return eventImage2;
+	}
+	public void setEventImage2(String eventImage2) {
+		this.eventImage2 = eventImage2;
+	}
 	@Override
 	public String toString() {
-		return "Event [eventNum=" + eventNum + ", eventImage=" + eventImage + ", eventTitle=" + eventTitle
-				+ ", eventContent=" + eventContent + "]";
+		return "Event [eventNum=" + eventNum + ", eventTitle=" + eventTitle + ", eventContent=" + eventContent
+				+ ", writer=" + writer + ", eventImage1=" + eventImage1 + ", eventImage2=" + eventImage2 + ", files="
+				+ files + "]";
 	}
-	
+
 	
 	
 }

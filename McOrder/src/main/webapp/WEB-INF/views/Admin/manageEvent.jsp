@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/manageOrder.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/manageEvent.css">
 <div id="content">
 	<div class="container">
 		<div class="row">
@@ -16,26 +16,34 @@
 				<hr style="border-top-width: 2px; background-color: #fff; width: 100%">
 			</div>
 		</div>
-	</div>
+	
+	<!-- 수진 추가_20171202 -->
+		<p class="article-comment margin-small">
+			<a class="btn btn-warning" href="regEvent.htm"  style="width: 200px; margin-top: 30px;"> 
+			<span 	style="color: #fff; font-size: 20px; font-family: 'Hanna', serif; margin-top: auto; margin-bottom: auto;">이벤트 등록하기</span>
+			</a>
+		</p>
+		
+	
 		<table>
 		<thead>
 			<tr>
 				<th class="eventNum" style="text-align: center;">번호</th>
-				<th class="eventTitle" style="text-align: center;">제목</th>
-				<th class="writer" style="text-align: center;">작성자</th>
+				<th class="eventTitle" style="text-align: center;">제목</th>				
+				<th class="content" style="text-align: center;">내용</th>
+			
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach items="${list}" var="n">
 				<tr style="text-align: center;">
-					<td class="eventNum">${n.eventNum}</td>
-					<td class="eventTitle"><a href="showEventDetailAdmin.htm?eventNum=${n.eventNum}">${n.eventTitle}</a></td>
-					<td class="writer">${n.writer}</td>
+					<td class="eventNum" style="text-align: center;">${n.eventNum}</td>
+					<td class="eventTitle" style="text-align: center;"><a href="showEventDetailAdmin.htm?eventNum=${n.eventNum}">${n.eventTitle}</a></td>
+					<td class="content" style="text-align: center;">${n.eventContent}</td>
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>	
-	<p class="article-comment margin-small">
-		<a class="btn-write button" href="regEvent.htm">이벤트 등록</a>
-	</p>
+	
+</div>
 </div>

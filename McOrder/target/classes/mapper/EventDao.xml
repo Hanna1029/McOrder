@@ -4,19 +4,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
+
+
 <mapper namespace="kr.or.kosta.dao.EventDao"> <!-- 주호 -->
-	<!-- list 가져오기 -->
+	<!-- list 가져오기 --> <!--  수진!!! 쿼리 수정!!! -->
 	<select id="getEventList" resultType="kr.or.kosta.dto.Event">
-		SELECT * FROM EVENT
+		select * from event
+		order by eventnum desc
 	</select>
 
-	<select id="getEvent" resultType="kr.or.kosta.dto.Event">
-		SELECT eventnum, eventtitle, eventimage, eventcontent, writer
+	<select id="getEvent" resultType="kr.or.kosta.dto.Event"> <!-- 수진 변경!!!!!!!!!!!!!!!!!!!!! -->
+		SELECT eventnum, eventtitle, eventImage1, eventImage2, eventContent, writer
 		FROM EVENT
 		WHERE EVENTNUM=#{eventNum}
 	</select>
 
-	<insert id="addEvent" parameterType="kr.or.kosta.dto.Event">
-		insert into event values(Event_eventNum.nextval, #{eventTitle}, #{eventImage, jdbcType=VARCHAR}, #{eventContent}, '0000')
+	<insert id="addEvent" parameterType="kr.or.kosta.dto.Event"> <!-- 수진 변경!!!!!!!!!!!!!!!!!!!!! -->
+		insert into event values(Event_eventNum.nextval, #{eventTitle}, #{eventImage1, jdbcType=VARCHAR}, #{eventImage2, jdbcType=VARCHAR}, #{eventContent}, '0000')
 	</insert>
+	
+	
+<!-- 수진 -->
+<!-- 최상위 관리자가 이벤트삭제 	public int deleteEvent(int eventNum); -->
+	<select id="deleteEvent" resultType="kr.or.kosta.dto.Event">
+		delete from event
+		where eventNum=#{eventNum}	
+	</select>
+
+<!-- 최상위 관리자가 이벤트수정 	public int editCompleteEvent(Event event); -->
+	<update id="editCompleteEvent">
+		update event
+		set eventTitle=#{eventTitle}, eventContent=#{eventContent}, eventImage1=#{eventImage1, jdbcType=VARCHAR}, eventImage2=#{eventImage2, jdbcType=VARCHAR}
+		where eventNum=#{eventNum}
+	</update>
+	
 </mapper>
