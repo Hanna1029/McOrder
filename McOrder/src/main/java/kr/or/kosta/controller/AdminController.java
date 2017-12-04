@@ -11,7 +11,9 @@ import java.security.Principal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -245,12 +247,76 @@ public class AdminController {
 		}
 	/////////////////// 메뉴 관련 메소드 ////////////////////////////
 
+		/*
+		 * @method Name : showMenuListAdmin
+		 * @date  : 2017.12.01
+		 * @author :2017.12.01. : 염주호
+		 * @description : 하위관리자가 관리자 페이지에서 매장에 판매되는 메뉴리스트 보는 것
+		 * @param spec : Model model
+		 * @return : String 
+		 */
+		@RequestMapping(value= "manageMenu_rowadmin_admin.htm", method = RequestMethod.GET)
+		public String showMenuListAdmin(Model model) {
+			List<Menu> list = menuService.getMenuList();
+			model.addAttribute("menuList", list);
+			return "manageMenu_rowadmin_admin.admin";
+		}
 		
-	// 하위관리자가 관리자 페이지에서 매장에 판매되는 메뉴리스트 보는 것
-	public String showMenuListAdmin(int branchCode, Model model) {
-		return null;
-	}
-
+		/*
+		 * @method Name : showMenuListAdmin
+		 * @date  : 2017.12.01
+		 * @author :2017.12.01. : 염주호
+		 * @description : 하위관리자가 관리자 페이지에서 매장에 판매되는 메뉴리스트에서 선택 등록
+		 * @param spec : Principal principal,HttpServletRequest request
+		 * @return : String 
+		 */
+		@RequestMapping(value="manageMenu_rowadmin_admin.htm", method = RequestMethod.POST)
+			public String showMenuListAdmin(Principal principal,HttpServletRequest request){
+				
+				String[] arr= request.getParameterValues("checkbox");	//체크박스 이름들 가져옴
+				int branchCode = Integer.parseInt(principal.getName());	//지점 코드 가져옴
+				
+				Map<String, Object> paramMap = new HashMap<>();
+				
+				Map<String, Object> menuMap;
+				
+				List<Map<String, Object>> menuList = new ArrayList<>(); 
+				
+				for(int i=0;i<arr.length;i++) {
+					menuMap = new HashMap<>();
+					
+					menuMap.put("menuName", arr[i]);
+					menuMap.put("branchCode", branchCode);
+					
+					menuList.add(menuMap);
+				}  
+				
+				paramMap.put("menuList", menuList);
+				
+				menuService.addMenuListRowAdmin(branchCode, paramMap);
+				
+			return "redirect:/Admin/manageMenu_rowadmin.htm";
+		}
+		
+		/*
+		 * @method Name : showMenuListRowAdmin
+		 * @date  : 2017.12.01
+		 * @author :2017.12.01. : 염주호
+		 * @description : 하위관리자에 최상위 관리자에서 선택한 메뉴 리스트 출력
+		 * @param spec : Principal principal, Model model
+		 * @return : String 
+		 */
+		@RequestMapping(value="manageMenu_rowadmin.htm", method = RequestMethod.GET)
+		public String showMenuListRowAdmin(Principal principal, Model model) {
+			int branchCode = Integer.parseInt(principal.getName());	//지점 코드 가져옴
+			
+			List<String> list = menuService.getMenuRowAdmin(branchCode);
+			System.out.println("showMenuListRowAdmin컨트롤러 list 출력 : "+list.toString() );
+			
+			model.addAttribute("menuList", list);
+			
+			return "manageMenu_rowadmin.admin";
+		}
 	/*
 	 * @method Name : showMenuListTopAdmin
 	 * @date  : 2017.11.30
@@ -303,10 +369,65 @@ public class AdminController {
 		return null;
 	}
 
-	// 최상위 관리지가 메뉴 하나 등록
-	public String addMenu(Menu menu) {
-		return null;
-	}
+	/*
+	 * @method Name : addMenu
+	 * @date  : 2017.12.01
+	 * @author :2017.12.01. : 염주호
+	 * @description : 최상위관리자가 메뉴 추가하러 가는 페이지
+	 * @param spec : 
+	 * @return : String 
+	 */
+		@RequestMapping(value = "registMenu.htm", method = RequestMethod.GET)
+		public String addMenu() {
+			System.out.println("여기가 get");
+			return "registMenu.admin";
+		}
+
+		/*
+		 * @method Name : addMenu
+		 * @date  : 2017.12.01
+		 * @author :2017.12.01. : 염주호
+		 * @description : 최상위관리자의 메뉴 등록
+		 * @param spec : Menu menu, HttpServletRequest request
+		 * @return : String 
+		 */
+		@RequestMapping(value="registMenu.htm", method = RequestMethod.POST)
+		public String addMenu(Menu menu, HttpServletRequest request) throws IOException {
+			
+			System.out.println("여기가 POST");
+			System.out.println("컨트롤러진입");
+			
+			
+			CommonsMultipartFile file = menu.getFile();
+			
+			String filename = "";
+			if(file != null) {
+				 //업로드한 파일이 있다면
+				
+					 filename = file.getOriginalFilename();
+					 String path = request.getServletContext().getRealPath("/resources/upload");
+					 String fpath = path + "\\" + filename;
+					 
+					 System.out.println(filename + " , " + fpath);
+					 
+					 if(!filename.equals("")) {
+						 //서버에 파일 업로드 (write)
+						 System.out.println("여기 들어왔나?");
+						 FileOutputStream fs = new FileOutputStream(fpath);
+						 fs.write(file.getBytes());
+						 fs.close();
+				 }
+			 }
+			
+			//실 DB Insert
+			 menu.setMenuImage(filename);
+			 
+			 
+			 menuService.addMenu(menu);
+			 System.out.println(menu.toString());
+			 
+			return "redirect:manageMenu.htm";
+		}
 //////////////////// 주문관리 관련 메소드 //////////////////////////////////////
 
 	/*

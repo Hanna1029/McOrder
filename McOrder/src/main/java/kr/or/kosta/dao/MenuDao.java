@@ -6,6 +6,7 @@ package kr.or.kosta.dao;
 * @Author : 최한나, 염주호, 김수진
 */ 
 import java.util.List;
+import java.util.Map;
 
 import kr.or.kosta.dto.Menu;
 
@@ -27,8 +28,18 @@ public interface MenuDao {
 	// 최상위관리자가 메뉴 추가
 	public int addMenu(Menu menu);
 	
-	// 하위 관리자가 메뉴 추가
-	public int addMenu(int branchCode, List<Menu> list);
+	
+	//최상위관리자 영양소 추가
+		public int addNutrient(Menu menu);
+			
+		// 하위관리자가 모든 메뉴 삭제 후 체크한 것들 다 add 할 때 선행될 메소드 매장메뉴 전체삭제
+		public int deleteResMenu(int branchCode);
+		
+		// 하위 관리자 리스트에 최상위 관리자의 메뉴를  삽입
+		public int addMenuListRowAdmin(Map<String, Object> paramMap, int branchCode);
+		
+		//하위 관리자 메뉴 리스트 뿌리기
+		public List<String> getMenuRowAdmin(int branchCode); 
 	
 	// 하위관리자가 모든 메뉴 삭제 후 체크한 것들 다 add 할 때 선행될 메소드 매장메뉴 전체삭제
 	public int deleteMenu(int branchCode);

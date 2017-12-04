@@ -7,6 +7,8 @@ package kr.or.kosta.dto;
 */ 
 import java.sql.Date;
 
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 public class Menu {
 
 	private String menuName;
@@ -20,7 +22,15 @@ public class Menu {
 	private String protein; // 단백질
 	private String natrium; // 나트륨
 	
-	
+	//파일업로드
+		private CommonsMultipartFile file;
+		public CommonsMultipartFile getFile() {
+			return file;
+		}
+		public void setFile(CommonsMultipartFile file) {
+			this.file = file;
+		}
+		//////////////////////
 	
 	public String getWeight() {
 		return weight;
