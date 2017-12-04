@@ -1,5 +1,10 @@
 package kr.or.kosta.dao;
-
+/*
+* @FileName : MenuDao
+* @Project : McOrder
+* @Date : 2017.12.27 
+* @Author : 최한나, 염주호, 김수진
+*/ 
 import java.util.List;
 
 import kr.or.kosta.dto.Menu;
@@ -9,7 +14,14 @@ public interface MenuDao {
 	// 오더바이할거여 !!!! 메뉴리스트 뿌리기!!
 	public List<Menu> getMenuList(int branchCode, String menuType, String orderBy);
 	
-	// 최상위관리자가보는 메뉴 리스트
+	/*
+	 * @method Name : getMenuList
+	 * @date : 2017.11.28
+	 * @author :2017.11.28. : 최한나
+	 * @description : 최상위관리자가보는 메뉴 리스트
+	 * @param spec : 
+	 * @return : List<Menu>
+	 */
 	public List<Menu> getMenuList();
 	
 	// 최상위관리자가 메뉴 추가
@@ -27,7 +39,14 @@ public interface MenuDao {
 	// 최상위 관리자가 메뉴 수정
 	public int updateMenu(Menu menu);
 	
-	// 메뉴 진짜 디테일
+	/*
+	 * @method Name : getMenuDetail
+	 * @date : 2017.11.30
+	 * @author :2017.11.30. : 최한나, 김수진
+	 * @description : 해당 메뉴 상세정보 불러오기
+	 * @param spec : String menuName
+	 * @return : Menu
+	 */
 	public Menu getMenuDetail(String menuName);
 	
 	// 주문 시 불고기 버거 디테일에 버거세트 내용도 같이 뿌려줘야 해서 이때는 리스트로 뿌릴거임

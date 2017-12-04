@@ -1,5 +1,10 @@
 package kr.or.kosta.service;
-
+/*
+* @FileName : MenuService
+* @Project : McOrder
+* @Date : 2017.12.27 
+* @Author : 최한나, 염주호
+*/
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -27,7 +32,14 @@ public class MenuService {
 		return null;
 	}
 	
-	// 진짜 메뉴 상세보기
+	/*
+	 * @method Name : getMenuDetail
+	 * @date : 2017.11.29
+	 * @author :2017.11.29. : 최한나
+	 * @description :  메뉴 상세보기
+	 * @param spec : String menuName
+	 * @return : Menu
+	 */
 	public Menu getMenuDetail(String menuName) {
 		
 		MenuDao menudao = session.getMapper(MenuDao.class);
@@ -41,7 +53,14 @@ public class MenuService {
 		return 0;
 	}
 	
-	// 최상위 관리자가 보는 메뉴리스트 한나 
+	/*
+	 * @method Name : getMenuList
+	 * @date : 2017.11.29
+	 * @author :2017.11.29. : 최한나
+	 * @description :  최상위 관리자가 보는 메뉴리스트
+	 * @param spec : 
+	 * @return : List<Menu>
+	 */
 	public List<Menu> getMenuList(){
 		
 		MenuDao menudao = session.getMapper(MenuDao.class);

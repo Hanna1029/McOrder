@@ -1,5 +1,10 @@
 package kr.or.kosta.dto;
-
+/*
+* @FileName : Nutrient
+* @Project : McOrder
+* @Date : 2017.12.27 
+* @Author : 최한나, 김수진, 염주호
+*/ 
 public class Nutrient {
 
 	private String menuName;

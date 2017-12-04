@@ -1,5 +1,10 @@
 package kr.or.kosta.dto;
-
+/*
+* @FileName : Order
+* @Project : McOrder
+* @Date : 2017.12.27 
+* @Author : 최한나, 김수진, 염주호
+*/ 
 import java.sql.Date;
 
 public class Order {
@@ -13,17 +18,18 @@ public class Order {
 	private Date orderCompleteTime;
 	//수정
 	private String orderCompleteTimestr;
+	private String orderComplete; // 주문완료되면 0 이 1이된다
+	private int deliveryNum;
+	private int branchCode; // 한나 추가
+	private String address;
+	
+	
 	public String getOrderCompleteTimestr() {
 		return orderCompleteTimestr;
 	}
 	public void setOrderCompleteTimestr(String orderCompleteTimestr) {
 		this.orderCompleteTimestr = orderCompleteTimestr;
 	}
-	// 
-	private String orderComplete; // 주문완료되면 0 이 1이된다
-	private int deliveryNum;
-	private int branchCode; // 한나 추가
-	private String address;
 	
 	public int getBranchCode() {
 		return branchCode;

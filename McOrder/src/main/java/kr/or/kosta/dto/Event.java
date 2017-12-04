@@ -1,5 +1,10 @@
 package kr.or.kosta.dto;
-
+/*
+* @FileName : Event
+* @Project : McOrder
+* @Date : 2017.12.27 
+* @Author : 최한나, 김수진, 염주호
+*/ 
 import java.util.List;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -15,15 +20,6 @@ public class Event {
 	private String eventImage1;
 	private String eventImage2;
 	
-	//단일 파일 업로드 추가//////////////////////////////////// (주호)_수진 변경
-	/*private CommonsMultipartFile file;
-	public CommonsMultipartFile getFile() {
-		return file;
-	}
-	public void setFile(CommonsMultipartFile file) {
-		this.file = file;
-	}
-	*/
 	//다중 파일 업로드/////////////////////////////////////
 	private List<CommonsMultipartFile> files;
 	
@@ -33,7 +29,7 @@ public class Event {
 	public void setFiles(List<CommonsMultipartFile> files) {
 		this.files = files;
 	}
-	/////////////////////////////////////////////////
+
 	public int getEventNum() {
 		return eventNum;
 	}

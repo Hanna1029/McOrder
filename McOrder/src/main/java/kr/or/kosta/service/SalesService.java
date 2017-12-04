@@ -1,5 +1,10 @@
 package kr.or.kosta.service;
-
+/*
+* @FileName : SalesService
+* @Project : McOrder
+* @Date : 2017.12.27 
+* @Author : 김수진, 최한나
+*/
 import java.sql.Date;
 import java.util.List;
 
@@ -16,50 +21,68 @@ public class SalesService {
 	@Autowired
 	private SqlSession session;
 	
-	/* 
-	@Class : SalesService
-	@Date : 2017.11.28 
-	@Author : 김수진
-	@Desc : 매장별 매출 리스트 보여주기
-	*/
+	/*
+	 * @method Name : showSalesList
+	 * @date : 2017.11.28
+	 * @author :2017.11.28. : 김수진
+	 * @description : 매장별 매출 리스트 보여주기
+	 * @param spec : int branchCode
+	 * @return : List<Sales>
+	 */
 	public List<Sales> showSalesList(int branchCode){
 		SalesDao salesdao = session.getMapper(SalesDao.class);
 		List<Sales> list = salesdao.getSalesList(branchCode);
 		return list;
 	}
 	
-	/* 
-	@Class : SalesService
-	@Date : 2017.11.29 
-	@Author : 김수진 + 최한나 수정 
-	@Desc : 관리자페이지에서 해당일자 매출클릭시 그 날 매출(주문내역?) 리스트 보여주기..... 로그인 아이디 0000 비번 0000
-	*/
-	//public List<Sales> salesDetail(Date salesDate) {
-	//public List<Order> salesDetail(int branchCode, String salesDate) {
+	/*
+	 * @method Name : salesDetail
+	 * @date : 2017.11.29
+	 * @author :2017.11.29. : 김수진
+	 * @description : 관리자페이지에서 해당 일 자 매출클릭시 그 날 주문내역 리스트 보여주기
+	 * @param spec : int branchCode, Date salesDate
+	 * @return : List<Order>
+	 */
+	/*
+	 * @method Name : salesDetail
+	 * @date : 2017.12.04
+	 * @author :2017.12.04. : 최한나 
+	 * @description : 관리자페이지에서 해당일자(일, 주, 월 단위 선택 후) 매출클릭시 그 날 주문내역 리스트 보여주도록 수정
+	 * @param spec : int branchCode, Date salesDate, int selectDay
+	 * @return : List<Order>
+	 */
 	public List<Order> salesDetail(int branchCode, Date salesDate, int selectDay) {
 		System.out.println("서비스1 왔구요");
 		SalesDao salesdao = session.getMapper(SalesDao.class);
 		System.out.println("서비스2");
 		System.out.println("salesDate : " + salesDate);
 		System.out.println("서비스브랜치코드 : " + branchCode);
-		System.out.println("서비스브랜치코드 : " + branchCode);
 		System.out.println("매출단위 : " + selectDay);
 		
 		List<Order> list = null;
 		
 		if(selectDay ==1 ) {
+			
 			list = salesdao.salesDetail(branchCode, salesDate);
 		}else if(selectDay == 2) {
+			
 			list = salesdao.salesWeeklyDetail(branchCode, salesDate);
 		}else {
+			
 			System.out.println("월단위 서비스에서 디비로 간다.");
 			list = salesdao.salesMonthlyDetail(branchCode, salesDate);
 		}
 		return list;
 	}
 
-	
-	// 한나  주 단위 매출 리스트 뽑기
+	/*
+	 * @method Name : getWeeklyTotalSales
+	 * @date : 2017.12.03
+	 * @author :2017.12.03. : 최한나 
+	 * @description : 주 단위 매출 리스트 뽑기
+	 * @param spec : int branchCode
+	 * @return : List<Sales>
+	 */
 	public List<Sales> getWeeklyTotalSales(int branchCode){
 		
 		SalesDao salesDao = session.getMapper(SalesDao.class);
@@ -68,8 +91,14 @@ public class SalesService {
 		
 	}
 	
-	
-	// 한나 월 단위 매출 리스트 뽑기
+	/*
+	 * @method Name : getMonthlyTotalSales
+	 * @date : 2017.12.03
+	 * @author :2017.12.03. : 최한나 
+	 * @description : 월 단위 매출 리스트 뽑기
+	 * @param spec : int branchCode
+	 * @return : List<Sales>
+	 */
 	public List<Sales> getMonthlyTotalSales(int branchCode){
 		
 		SalesDao salesDao = session.getMapper(SalesDao.class);

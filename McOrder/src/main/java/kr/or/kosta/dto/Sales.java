@@ -1,5 +1,10 @@
 package kr.or.kosta.dto;
-
+/*
+* @FileName : Sales
+* @Project : McOrder
+* @Date : 2017.12.27 
+* @Author : 최한나, 김수진
+*/ 
 import java.sql.Date;
 
 public class Sales {

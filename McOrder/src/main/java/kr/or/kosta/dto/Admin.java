@@ -1,11 +1,18 @@
 package kr.or.kosta.dto;
-
+/*
+* @FileName : Admin
+* @Project : McOrder
+* @Date : 2017.12.27 
+* @Author : 최한나, 김수진, 염주호
+*/ 
 public class Admin {
 
 	private int branchCode;
 	private String id;
 	private String name;
 	private String password;
+	
+	
 	public int getBranchCode() {
 		return branchCode;
 	}

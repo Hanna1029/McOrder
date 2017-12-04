@@ -13,18 +13,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where mo.id = m.id and branchCode=#{branchCode}
 		order by mo.orderComplete asc , mo.orderCompleteTime desc 
 	</select>  
-<!--    	<select id="getCompletedOrder" resultType="kr.or.kosta.dto.Order">
-		select *
-		from(
-		select rownum rn, orderNum, mo.id, price, menu, orderStartTime, orderCompleteTime
-		, orderComplete, branchCode, deliveryNum, m.phoneNum
-		from memberorder mo ,member m 
-		where mo.id = m.id and branchCode=#{param1}
-		order by mo.orderComplete asc , mo.orderNum desc 
-		) where rn between #{param2} and #{param2} 
-		
-	</select> -->
-	<!-- 총 인원수 구하기  한나 -->
+
+	<!-- 총 주문내역 갯 수 구하기  한나 -->
 	<select id="getCount" resultType="Integer">
 		select count(*) cnt
 		from memberorder
