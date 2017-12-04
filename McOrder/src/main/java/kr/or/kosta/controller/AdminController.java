@@ -84,44 +84,41 @@ public class AdminController {
 			return "registEvent.admin";
 		}
 		
-		// 최상위 관리자 이벤트 등록 처리 (주호)
-		@RequestMapping(value = "regEvent.htm", method = RequestMethod.POST)
-		public String addEvent(Event event, HttpServletRequest request, Principal princpal) throws IOException {
-			
-			System.out.println("단일파일 업로드");
-			System.out.println("event : " + event.getEventTitle());
-			System.out.println("event : " + event.getEventContent());
-			System.out.println("event : " + event.getFile());
-			
-			CommonsMultipartFile file = event.getFile();
-			
-			String filename = "";
-			if(file != null) {
-				 //업로드한 파일이 있다면
-					 filename = file.getOriginalFilename();
-					 String path = request.getServletContext().getRealPath("/resources/upload");
-					 String fpath = path + "\\" + filename;
+		// 최상위 관리자 이벤트 등록 처리 (주호) // _(수진) 이미지 출력되게 수정!!!!
+		
+				@RequestMapping(value = "regEvent.htm", method = RequestMethod.POST)
+				public String addEvent(Event event, HttpServletRequest request, Principal princpal) throws IOException {
+					
+					CommonsMultipartFile file = event.getFile();
+					
+					String filename = "";
+					String fpath2 = ""; //수진 변경
+					if(file != null) {
+						 //업로드한 파일이 있다면
+							 filename = file.getOriginalFilename();
+							 String path = request.getServletContext().getRealPath("/resources/upload");
+							 String fpath = path + "\\" + filename;
+							 fpath2 = "resources/upload" + "/" + filename; // 수진 변경
+							 
+							 //System.out.println(filename + " , " + fpath);
+							 
+							 if(!filename.equals("")) {
+								 //서버에 파일 업로드 (write)
+								 //System.out.println("여기 들어왔나?");
+								 FileOutputStream fs = new FileOutputStream(fpath);
+								 fs.write(file.getBytes());
+								 fs.close();
+						 }
+					 }
+					//실 DB Insert
+					//event.setEventImage(filename);
+					 event.setEventImage(fpath2); // 수진 변경
 					 
-					 System.out.println(filename + " , " + fpath);
-					 
-					 if(!filename.equals("")) {
-						 //서버에 파일 업로드 (write)
-						 System.out.println("여기 들어왔나?");
-						 FileOutputStream fs = new FileOutputStream(fpath);
-						 fs.write(file.getBytes());
-						 fs.close();
-				 }
-			 }
-			//실 DB Insert
-			 event.setEventImage(filename);
-			 System.out.println("filename" + event.getEventImage());
-			 //event.setWriter(princpal.getName()); //로그인한 사용자 id정보
-			 
-			 System.out.println("투스트링 : "+event.toString());
-			 eventService.addEvent(event);
-			
-			return "redirect:/Admin/manageEvent.htm";
-		}
+					 eventService.addEvent(event);
+					
+					return "redirect:/Admin/manageEvent.htm";
+				}
+
 
 		
 	// 관리자가 이벤트 수정할 때 수정 페이지 get방식으로 뿌리는 것
@@ -275,42 +272,45 @@ public class AdminController {
 		/* 
 		@Class : SalesController
 		@Date : 2017.11.29 
-		@Author : 김수진
+		@Author : 김수진 + 한나 수정
 		@Desc : 매출 리스트에서 매출일자 클릭하면 그 일자에 판매 리스트 모두 보여주기........ 로그인 아이디 0001 비번 0000
 		*/	
 		@RequestMapping("manageSalesDetail.htm")
 		//public String salesDetail(Principal principal, String salesDate, Model model) {
-		public String salesDetail(Principal principal, Date salesDate, Model model) {
+		public String salesDetail(Principal principal, Date salesDate, int selectDay, Model model) {
 		//public String salesDetail(int branchCode, Date salesDate, Model model) {
 			System.out.println("컨트롤러탔다");
-		
+			System.out.println("selectDay 가져왔나? : " + selectDay);
 			System.out.println("salesDate 가져왔니?" +  salesDate);
 			int branchCode = Integer.parseInt(principal.getName());
 			System.out.println("branchcode 는?" + branchCode);
-			List<Order> list = salesService.salesDetail(branchCode, salesDate);
+			List<Order> list = null;
+			list = salesService.salesDetail(branchCode, salesDate, selectDay);
 			System.out.println("컨트롤러2");
 			System.out.println("list" + list);
-			model.addAttribute("list", list);
+		model.addAttribute("list", list);
 			return "manageSalesDetail.admin";
 		}
 		
 		// 한나 > 매출 리스트에서 select으로 일 월 주 로 값 바뀔 때마다 비동기로 다른 데이터 뿌려주기
 		@RequestMapping("salesOfSelectType.htm")
-		public View salesOfSelectType(@RequestParam("selectDay") int selectDay, Principal principal, ModelMap maps ) {
+		public View salesOfSelectType(@RequestBody Sales sales, Principal principal, ModelMap map ) {
 			
+			System.out.println("매출 비동기 컨트롤러 왔다!!!");
 			int branchCode = Integer.parseInt(principal.getName());
 			List<Sales> list = null;
-			
+			int selectDay = sales.getSelectDay();
+			System.out.println("brachCode 값 잘 왔나요 : " + branchCode);
+			System.out.println("select값 잘왔나요 : " + selectDay);
 			if(selectDay ==1) {
 				list = salesService.showSalesList(branchCode);
 			}else if(selectDay ==2) {
-				
+				list = salesService.getWeeklyTotalSales(branchCode);
 			}else {
-				
+				list = salesService.getMonthlyTotalSales(branchCode);
 			}
-			
+			map.addAttribute("salesList", list);
 			System.out.println("컨트롤러에서 리스트 받아오는 거");
-			
 			
 			return jsonview;
 		}

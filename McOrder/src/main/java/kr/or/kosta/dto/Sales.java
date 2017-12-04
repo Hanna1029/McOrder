@@ -5,6 +5,64 @@ import java.sql.Date;
 public class Sales {
 
 	private Date salesDate;
+	private int totalDailySales;
+	private int branchCode;
+	
+	// 한나 수정
+	private int selectDay;
+	private Date nextDay;
+	private int totalWeeklySales;
+	private int totalMonthlySales;
+	private Date weeklyStartDate;
+	private Date weeklyEndDate;
+	private Date lastDay;
+	
+	
+	//
+	
+	
+	public Date getLastDay() {
+		return lastDay;
+	}
+	public void setLastDay(Date lastDay) {
+		this.lastDay = lastDay;
+	}
+	public int getSelectDay() {
+		return selectDay;
+	}
+	public void setSelectDay(int selectDay) {
+		this.selectDay = selectDay;
+	}
+	public Date getNextDay() {
+		return nextDay;
+	}
+	public void setNextDay(Date nextDay) {
+		this.nextDay = nextDay;
+	}
+	public int getTotalWeeklySales() {
+		return totalWeeklySales;
+	}
+	public void setTotalWeeklySales(int totalWeeklySales) {
+		this.totalWeeklySales = totalWeeklySales;
+	}
+	public int getTotalMonthlySales() {
+		return totalMonthlySales;
+	}
+	public void setTotalMonthlySales(int totalMonthlySales) {
+		this.totalMonthlySales = totalMonthlySales;
+	}
+	public Date getWeeklyStartDate() {
+		return weeklyStartDate;
+	}
+	public void setWeeklyStartDate(Date weeklyStartDate) {
+		this.weeklyStartDate = weeklyStartDate;
+	}
+	public Date getWeeklyEndDate() {
+		return weeklyEndDate;
+	}
+	public void setWeeklyEndDate(Date weeklyEndDate) {
+		this.weeklyEndDate = weeklyEndDate;
+	}
 	//
 	private String salesDate2;
 	public String getSalesDate2() {
@@ -14,8 +72,7 @@ public class Sales {
 		this.salesDate2 = salesDate2;
 	}
 	//
-	private int totalDailySales;
-	private int branchCode;
+	
 	public Date getSalesDate() {
 		return salesDate;
 	}

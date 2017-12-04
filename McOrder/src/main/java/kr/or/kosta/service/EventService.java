@@ -40,13 +40,23 @@ public class EventService {
 		}
 	
 	
-	// 최상위 관리자가 이벤트 수정
-	public void editCompleteEvent(Event event) {
 		
-	}
-	
-	// 최상위 관리자가 이벤트 삭제
-	public void deleteEvent(int eventNum) {
+		// 최상위 관리자가 이벤트 수정 (수진)
+		public void editCompleteEvent(Event event) {
+			System.out.println("서비스 시작");
+			System.out.println(event.getEventContent());
+			System.out.println(event.getEventImage());
+			System.out.println(event.getEventTitle());
+			System.out.println(event.getEventNum());
+			EventDao eventdao = session.getMapper(EventDao.class);
+			eventdao.editCompleteEvent(event);
+			System.out.println("서비스 끄읏");
+		}
 		
-	} 
+		// 최상위 관리자가 이벤트 삭제 (수진)
+		public void deleteEvent(int eventNum) {
+			EventDao eventdao = session.getMapper(EventDao.class);
+			eventdao.deleteEvent(eventNum);	
+		} 
+		
 }

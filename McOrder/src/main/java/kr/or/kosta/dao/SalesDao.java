@@ -27,5 +27,9 @@ public interface SalesDao {
 	// 주 단위 매출 리스트 보기
 	public List<Sales> getWeeklySalesList(int branchCode);
 	
+	// 주 단위 매출 상세 내역
+	public List<Order> salesWeeklyDetail(int branchCode, Date nextDay);
 	
+	// 월 단위 매출 상세 내역
+	public List<Order> salesMonthlyDetail(int branchCode, Date lastDay);
 }

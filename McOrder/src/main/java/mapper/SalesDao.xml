@@ -25,6 +25,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    from memberorder
    where branchcode= #{param1} and substr(orderCompleteTime,1,10) = #{param2}   
  </select>
+<!-- /////////////////////////////////////////////////////////////////////////  한나 -->
+<select id="salesWeeklyDetail" resultType="kr.or.kosta.dto.Order">
+select orderNum, id, price, menu, orderStartTime ,to_char(orderCompleteTime, 'YYYY-MM-DD HH24:MI:SS') orderCompleteTimestr, branchCode, nextDay
+from(
+select orderNum, id, price, menu, orderStartTime ,orderCompleteTime, branchCode, NEXT_DAY(TRUNC(ordercompletetime), 1) nextday
+from memberOrder where branchCode=#{param1}
+) where nextDay = #{param2}
+</select>
+
+<select id="salesMonthlyDetail" resultType="kr.or.kosta.dto.Order">
+select orderNum, id, price, menu, orderStartTime ,to_char(orderCompleteTime, 'YYYY-MM-DD HH24:MI:SS') orderCompleteTimestr, branchCode, lastDay
+from(
+select orderNum, id, price, menu, orderStartTime ,orderCompleteTime, branchCode, LAST_DAY(trunc(ordercompletetime)) lastDay 
+from memberOrder where branchCode=#{param1}
+) where lastDay = #{param2}
+</select>
 
 <!-- // 주문완료시 매출액에 자동 합산
 	public int addTotalSales(int branchCode, int price); 
@@ -32,11 +48,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  먼저 들어온 값 있는지 봐야해 -->
 
 <!-- 월 단위 매출 리스트 뽑기 -->
-<select id="getMontlySalesList">
-
-</select>
+<select id="getMontlySalesList" resultType="kr.or.kosta.dto.Sales">
+select lastDay, branchCode, sum(totalDailySales) totalMonthlySales 
+from(
+select salesDate, branchCode, totalDailySales, LAST_DAY(salesDate) lastDay 
+from sales where branchCode=#{branchCode}
+) group by lastDay, branchCode
+</select> 
 <!-- 주 단위 매출 리스트 뽑기 -->
-<select id="getWeeklySalesList">
-
+<select id="getWeeklySalesList" resultType="kr.or.kosta.dto.Sales">
+select nextDay, branchCode, sum(totalDailySales) totalWeeklySales , nextDay-8 weeklyStartDate, nextDay-2 weeklyEndDate
+from(
+select salesDate, branchCode, totalDailySales, NEXT_DAY(TRUNC(salesDate), 1) nextDay
+from sales where branchCode=#{branchCode}
+) group by nextDay, branchCode
 </select>
 </mapper>
